@@ -67,3 +67,18 @@ filtered_df = df[(df['Region'] == region_filter) & (df['State'] == state_filter)
 
 # Muestra el DataFrame filtrado
 st.write(filtered_df)
+
+# Verificar si las columnas necesarias existen en el DataFrame
+required_columns = ['Region', 'Sales', 'Category'] #Añade 'Category'
+for col in required_columns:
+    if col not in df.columns:
+        st.error(f"Error: La columna '{col}' no existe en el DataFrame.")
+        st.stop()
+# Gráfico de pastel por categoría
+if 'Category' in df.columns: #Verifica si la columna existe
+    category_counts = filtered_df['Category'].value_counts()
+    fig_pie = px.pie(values=category_counts.values, names=category_counts.index,
+                     title='Distribución de Categorías')
+    st.plotly_chart(fig_pie)
+else:
+  st.error("Error: La columna 'Category' no existe en el archivo.")
