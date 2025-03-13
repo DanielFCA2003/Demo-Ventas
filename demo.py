@@ -54,7 +54,10 @@ fig = px.bar(ventas_por_region, x='Region', y='Sales',
 st.plotly_chart(fig)
 
 # prompt: Crear un filtro con el dataframe df de la columna region y otro con la columna state
-
+import pandas as pd
+import streamlit as st
+import plotly.express as px
+  
 # Crea los filtros en Streamlit
 region_filter = st.selectbox("Selecciona una Región", df['Region'].unique())
 state_filter = st.selectbox("Selecciona un Estado", df['State'].unique())
