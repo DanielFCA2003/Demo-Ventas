@@ -56,23 +56,27 @@ st.plotly_chart(fig)
 import streamlit as st
 import pandas as pd
 
-# Supongamos que tienes un dataframe llamado df
-# df = pd.read_csv('ruta_a_tu_archivo.csv')
+# prompt: Usando streamlit, crear un filtro usando la columna region del dataframe df
 
-# Crear algunas datos de ejemplo
-data = {
-    'region': ['Norte', 'Sur', 'Este', 'Oeste', 'Norte', 'Sur'],
-    'valor': [10, 20, 30, 40, 50, 60]
-}
-df = pd.DataFrame(data)
+# Crea el filtro para la región
+region_filter = st.multiselect("Selecciona Región:", df['Region'].unique())
 
-# Crear un filtro de selección basado en la columna 'region'
-regiones = df['region'].unique()
-region_seleccionada = st.sidebar.selectbox('Selecciona una región:', regiones)
+# Filtra el DataFrame basado en la selección del usuario
+if region_filter:
+  df_filtered = df[df['Region'].isin(region_filter)]
+else:
+  df_filtered = df  # Mostrar todos los datos si no se selecciona ninguna región
 
-# Filtrar el dataframe basado en la región seleccionada
-df_filtrado = df[df['region'] == region_seleccionada]
+# Muestra el DataFrame filtrado en Streamlit
+st.write(df_filtered)
 
-# Mostrar el dataframe filtrado
-st.write('Dataframe filtrado por región:', region_seleccionada)
-st.dataframe(df_filtrado)
+# Agrupa las ventas por región del dataframe filtrado
+ventas_por_region = df_filtered.groupby('Region')['Sales'].sum().reset_index()
+
+# Crea el gráfico de barras con Plotly Express
+fig = px.bar(ventas_por_region, x='Region', y='Sales',
+             labels={'Region': 'Región', 'Sales': 'Ventas Totales'},
+             title='Ventas por Región')
+
+# Muestra el gráfico en Streamlit
+st.plotly_chart(fig)
